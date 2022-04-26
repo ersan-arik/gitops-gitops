@@ -1,6 +1,6 @@
 pipeline {
   triggers {
-   cron ('H/5 * * * *')
+    cron ('H/5 * * * *')
   }
   agent {
     node {
@@ -10,15 +10,15 @@ pipeline {
   stages {
     stage ('Check resource drift') {
       steps {
-       sh 'oc diff -k config | tee drift-report.txt'
-       sh '! test -s drift-report.txt'
+        sh 'oc diff -k config | tee drift-report.txt'
+        sh '! test -s drift-report.txt'
       }
     }
   }
   post {
     failure {
       archiveArtifacts artifacts: '*.txt'
-      build job: 'apply'
+      build job: 'apply/main'
     }
     success {
       sh 'rm drift-report.txt'
